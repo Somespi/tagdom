@@ -1,4 +1,4 @@
-enum token_type {
+export enum token_type {
     SLASH,
     GREATER,
     LESS,
@@ -8,7 +8,7 @@ enum token_type {
 }
 
 
-interface Token {
+export interface Token {
     type: token_type;
     value: string;
     index: number;
