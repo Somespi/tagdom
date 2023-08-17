@@ -1,2 +1,2 @@
-export {default as lexer} from "./lexer";
-export {default as parser} from "./parser";
+export {default as tokenize} from "./lexer";
+export {default as parse} from "./parser";
