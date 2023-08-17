@@ -1,3 +1,3 @@
-export { default as tag } from "./generator/backtick";
+import tag from "./generator/backtick";
 
 module.exports = tag;
