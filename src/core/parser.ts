@@ -17,9 +17,14 @@ const except = (current: token_type, a: token_type) => {
     return true
 }
 
-export const parse = (tokens: Token[]): Tag[] => {
+export const parse = (tokens: Token[]): Tag => {
     let currentTokenIndex = 0;
-    const tags: Tag[] = [];
+    let tag: Tag = {
+        name: "",
+        value: "",
+        attributes: [],
+        children: []
+    };
 
     const nextToken = () => {
         currentTokenIndex++;
@@ -108,12 +113,12 @@ export const parse = (tokens: Token[]): Tag[] => {
 
     while (currentTokenIndex < tokens.length) {
         if (compareTokenType(currentToken().type, token_type.LESS)) {
-            tags.push(parseTag() as Tag);
+            tag = parseTag() as Tag
         }
         nextToken();
     }
 
-    return tags;
+    return tag;
 };
 
 export default parse
