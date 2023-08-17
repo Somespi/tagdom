@@ -116,3 +116,4 @@ export const parse = (tokens: Token[]): Tag[] => {
     return tags;
 };
 
+export default parse
