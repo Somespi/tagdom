@@ -52,6 +52,14 @@ const tokenize = (code: string): Token[] => {
                     index: currentIndex
                 })
 
+            
+            case '=':
+                tokens.push({
+                    type: token_type.EQUAL,
+                    value: code[currentIndex],
+                    index: currentIndex
+                })
+
             default:
                 if (currentToken && tokens.length > 0 && tokens[tokens.length - 1].type === token_type.ANY) {
                     tokens[tokens.length - 1].value += code[currentIndex];
