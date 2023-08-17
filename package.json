@@ -1,0 +1,26 @@
+{
+  "name": "veloxjs",
+  "version": "0.0.1",
+  "description": "convert HTML-like tags into native DOM elements",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Somespi/veloxJS.git"
+  },
+  "keywords": [
+    "transform",
+    "procces",
+    "veloxjs",
+    "velox",
+    "DOM"
+  ],
+  "author": "Someone.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Somespi/veloxJS/issues"
+  },
+  "homepage": "https://github.com/Somespi/veloxJS#readme"
+}
