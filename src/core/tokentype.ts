@@ -6,6 +6,8 @@ export enum token_type {
     SINGLE_QUOTE,
     DOUBLE_QUOTE,
     ANY,
+    LEFT_BRACKET, // {
+    RIGHT_BRACKET, // }
     EQUAL
 }
 
