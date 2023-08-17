@@ -1,5 +1,11 @@
 import { Token, token_type } from "./tokentype";
 
+/**
+ * Tokenizes a given code string and returns an array of tokens.
+ *
+ * @param {string} code - The code string to be tokenized.
+ * @return {Token[]} - An array of tokens representing the code string.
+ */
 const tokenize = (code: string): Token[] => {
     const tokens: Token[] = []
     let currentIndex = 0;
