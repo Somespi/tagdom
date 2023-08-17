@@ -116,4 +116,3 @@ export const parse = (tokens: Token[]): Tag[] => {
     return tags;
 };
 
-console.log(parse(tokenize("<foo {class=\"bar\" id=\"baz\"}>bar</foo>"))[0].attributes);
