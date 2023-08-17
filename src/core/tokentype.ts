@@ -7,3 +7,9 @@ enum token_type {
     DOUBLE_QUOTE,
 }
 
+
+interface Token {
+    type: token_type;
+    value: string;
+    index: number;
+}
