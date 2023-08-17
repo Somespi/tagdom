@@ -6,6 +6,9 @@ const build = (tag) => {
     tag.children.forEach(child => {
         element.appendChild(build(child));
     });
+    tag.attributes.forEach(attr => {
+        element.setAttribute(attr.name, attr.value);
+    });
     return element;
 };
 exports.default = build;
