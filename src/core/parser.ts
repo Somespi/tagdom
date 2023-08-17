@@ -13,50 +13,79 @@ const compare = (a: token_type, b: token_type) => {
 
 const except = (current: token_type, a: token_type) => {
     if (current.toString() != a.toString())
-        throw "Parse: Unexpected token";
+        throw "Parse: Unexpected token, Excepted: " + a + ", Got: " + current;
     return true
 }
 
-const parser = (tokens: Token[]): Tag[] => {
-    let currentok = 0;
-    let tags: Tag[] = []
-    while (currentok < tokens.length) {
-        
-        const token = () => tokens[currentok];
-        const next = () => currentok++;
+export const parse = (tokens: Token[]): Tag[] => {
+    let currentTokenIndex = 0;
+    const tags: Tag[] = [];
+
+    const nextToken = () => {
+        currentTokenIndex++;
+    };
+
+    const currentToken = () => {
+        return tokens[currentTokenIndex];
+    };
+
+    const compareTokenType = (a: token_type, b: token_type) => {
+        return a === b;
+    };
+
+    const parseTag = (): Tag | undefined => {
+        if (compareTokenType(currentToken().type, token_type.LESS)) {
+            nextToken(); // Eats LESS
 
 
-        const parseTag = (): Tag => {
-            except(token().type , token_type.LESS) 
-            
-            next(); // eats LESS
-            
-            except(token().type, token_type.ANY)
-
-                let tag: Tag = { name: token().value, value: "", children: [] }
-
-                next()
-                except(token().type, token_type.GREATER)
-                next()
-                
-                
-            while (!(compare(token().type, token_type.LESS) && tokens[currentok + 1].value == tag.name && tokens[currentok+2].type == token_type.SLASH)) {
-                    if(compare(token().type, token_type.ANY)) {
-                        tag.value += token().value;
-                    } else if (compare(token().type, token_type.LESS)) {
-                        tag.children.push(parseTag());
-                    } else {
-                        break
-                    }
-                    next();
+            if (compareTokenType(currentToken().type, token_type.SLASH)) {
+                nextToken(); // Eats SLASH
+                const tagName = currentToken().value; // Closing tag name
+                nextToken();
+                if (!compareTokenType(currentToken().type, token_type.GREATER)) {
+                    throw `Parse: Unexpected token, Expected: ${token_type.GREATER}, Got: ${currentToken().type}`;
                 }
-                
+                nextToken();
+                return { name: tagName, value: "", children: [] };
+
+
+            } else if (compareTokenType(currentToken().type, token_type.ANY)) {
+                    const tagName = currentToken().value; 
+                nextToken();
+
+
+                if (!compareTokenType(currentToken().type, token_type.GREATER)) {
+                    throw `Parse: Unexpected token, Expected: ${token_type.GREATER}, Got: ${currentToken().type}`;
+                }
+
+
+                nextToken();
+                const tag: Tag = { name: tagName, value: "", children: [] };
+                while (!(compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.SLASH) && tokens[currentTokenIndex + 2].value === tag.name )) {
+                    
+                    
+                        if (compareTokenType(currentToken().type, token_type.ANY) && !compareTokenType(tokens[currentTokenIndex + 1].type, token_type.GREATER)) {
+
+                        tag.value += currentToken().value;
+                        
+                    } else if ( compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.ANY) ) {
+                        tag.children.push(parseTag() as Tag);
+                    }
+                    nextToken();
+                }
                 return tag;
+            }
         }
+    };
 
-        if (token().type == token_type.LESS) tags.push(parseTag());
-        next();
+    while (currentTokenIndex < tokens.length) {
+        if (compareTokenType(currentToken().type, token_type.LESS)) {
+            tags.push(parseTag() as Tag);
+        }
+        nextToken();
     }
-    return tags
-}
 
+    return tags;
+};
+
+console.log(parse(tokenize("<foo>bar <test><bold>idk</bold></test></foo>"))[0].children[0].children);
