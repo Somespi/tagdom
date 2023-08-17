@@ -1,3 +1,1 @@
-import tag from "./generator/backtick";
-
-module.exports = tag;
+export { default as tag } from "./generator/backtick";
