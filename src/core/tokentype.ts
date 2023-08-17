@@ -5,6 +5,7 @@ export enum token_type {
     DASH,
     SINGLE_QUOTE,
     DOUBLE_QUOTE,
+    ANY
 }
 
 
