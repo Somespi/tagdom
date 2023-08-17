@@ -51,6 +51,7 @@ const tokenize = (code: string): Token[] => {
                     value: code[currentIndex],
                     index: currentIndex
                 })
+                break;
 
             
             case '=':
@@ -59,7 +60,24 @@ const tokenize = (code: string): Token[] => {
                     value: code[currentIndex],
                     index: currentIndex
                 })
+                break;
 
+            case '{':
+                tokens.push({
+                    type: token_type.LEFT_BRACKET,
+                    value: code[currentIndex],
+                    index: currentIndex
+                })
+                break;
+            
+            case '}':
+                tokens.push({
+                    type: token_type.RIGHT_BRACKET,
+                    value: code[currentIndex],
+                    index: currentIndex
+                })
+                break;
+            
             default:
                 if (currentToken && tokens.length > 0 && tokens[tokens.length - 1].type === token_type.ANY) {
                     tokens[tokens.length - 1].value += code[currentIndex];
@@ -82,5 +100,5 @@ const tokenize = (code: string): Token[] => {
     return tokens
 }
 
-
+console.log(tokenize("<foo id=\"\" >bar</foo>"));
 export default tokenize
