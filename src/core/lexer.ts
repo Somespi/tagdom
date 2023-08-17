@@ -100,5 +100,4 @@ const tokenize = (code: string): Token[] => {
     return tokens
 }
 
-console.log(tokenize("<foo id=\"\" >bar</foo>"));
 export default tokenize

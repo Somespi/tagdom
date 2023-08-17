@@ -46,29 +46,57 @@ export const parse = (tokens: Token[]): Tag[] => {
                     throw `Parse: Unexpected token, Expected: ${token_type.GREATER}, Got: ${currentToken().type}`;
                 }
                 nextToken();
-                return { name: tagName, value: "", children: [] };
+                return { name: tagName, value: "", children: [], attributes: [] };
 
 
             } else if (compareTokenType(currentToken().type, token_type.ANY)) {
-                    const tagName = currentToken().value; 
+                const tagName = currentToken().value.trim();
                 nextToken();
 
 
-                if (!compareTokenType(currentToken().type, token_type.GREATER)) {
+                if (!compareTokenType(currentToken().type, token_type.GREATER) && !compareTokenType(currentToken().type, token_type.LEFT_BRACKET)) {
                     throw `Parse: Unexpected token, Expected: ${token_type.GREATER}, Got: ${currentToken().type}`;
+                }
+                let attributes: { name: string, value: string }[] = []
+                if(compareTokenType(currentToken().type, token_type.LEFT_BRACKET)) {
+                    nextToken();
+                    while (!(compareTokenType(currentToken().type, token_type.RIGHT_BRACKET))) {
+                        let attr: { name: string, value: string } = {
+                            name: "",
+                            value: ""
+                        }
+
+                        if(compareTokenType(currentToken().type, token_type.ANY)) {
+                            attr.name = currentToken().value;
+                            nextToken();
+                            except(currentToken().type, token_type.EQUAL);
+                            nextToken()
+                            except(currentToken().type, token_type.DOUBLE_QUOTE);
+                            nextToken();
+                            attr.value = currentToken().value;
+                            nextToken();
+                            except(currentToken().type, token_type.DOUBLE_QUOTE);
+                            attributes.push(attr)
+                        }
+                        nextToken()
+                    }
+                    
                 }
 
 
                 nextToken();
-                const tag: Tag = { name: tagName, value: "", children: [] };
-                while (!(compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.SLASH) && tokens[currentTokenIndex + 2].value === tag.name )) {
-                    
-                    
-                        if (compareTokenType(currentToken().type, token_type.ANY) && !compareTokenType(tokens[currentTokenIndex + 1].type, token_type.GREATER)) {
+                const tag: Tag = {
+                    name: tagName, value: "", children: [],
+                    attributes: attributes
+                };
+                while (!(compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.SLASH) && tokens[currentTokenIndex + 2].value === tag.name)) {
+
+
+                    if (compareTokenType(currentToken().type, token_type.ANY) && !compareTokenType(tokens[currentTokenIndex + 1].type, token_type.GREATER)) {
 
                         tag.value += currentToken().value;
-                        
-                    } else if ( compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.ANY) ) {
+
+                    } else if (compareTokenType(currentToken().type, token_type.LESS) && compareTokenType(tokens[currentTokenIndex + 1].type, token_type.ANY)) {
                         tag.children.push(parseTag() as Tag);
                     }
                     nextToken();
@@ -88,4 +116,4 @@ export const parse = (tokens: Token[]): Tag[] => {
     return tags;
 };
 
-console.log(parse(tokenize("<foo>bar <test><bold>idk</bold></test></foo>"))[0].children[0].children);
+console.log(parse(tokenize("<foo {class=\"bar\" id=\"baz\"}>bar</foo>"))[0].attributes);
