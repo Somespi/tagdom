@@ -5,9 +5,8 @@ import { Token, token_type } from "./tokentype";
 
 
 const compare = (a: token_type, b: token_type) => {
-    if (a == b)
-        return true;
-    return false;
+    return(a == b)
+       
 }
 
 
